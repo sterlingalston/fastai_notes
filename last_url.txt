@@ -1,0 +1,4 @@
+Last url:
+[Practical Deep Learning for Coders - 1: Getting started](https://course.fast.ai/Lessons/lesson1.html)
+
+https://www.kaggle.com/code/sterlingalston/is-it-a-bird-creating-a-model-from-your-own-data/edit/run/294240643
