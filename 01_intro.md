@@ -213,4 +213,8 @@ new dataset—a process called *fine-tuning*.
 |CNN | Convolutional neural network; a type of neural network that works particularly well for computer vision tasks
 |=====
 ```
+Creating a model that can recognize the content of every individual pixel in an image is called _segmentation_. Here is how we can train a segmentation model with fastai, using a subset of the [_Camvid_ dataset](http://www0.cs.ucl.ac.uk/staff/G.Brostow/papers/Brostow_2009-PRL.pdf) from the paper "Semantic Object Classes in Video: A High-Definition Ground Truth Database" by Gabruel J. Brostow, Julien Fauqueur, and Roberto Cipolla:
+
+![image](.attachments/1a493b413ac71d0517eee288fbcb894995de0b02.png) 
+
 
