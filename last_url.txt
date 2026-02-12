@@ -1,3 +1,9 @@
+Fast Book:
+
+[GitHub - fastai/fastbook: The fastai book, published as Jupyter Notebooks](https://github.com/fastai/fastbook/)
+
+
+
 Last url:
 [Practical Deep Learning for Coders - 1: Getting started](https://course.fast.ai/Lessons/lesson1.html)
 

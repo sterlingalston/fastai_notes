@@ -213,8 +213,178 @@ new dataset—a process called *fine-tuning*.
 |CNN | Convolutional neural network; a type of neural network that works particularly well for computer vision tasks
 |=====
 ```
+
 Creating a model that can recognize the content of every individual pixel in an image is called _segmentation_. Here is how we can train a segmentation model with fastai, using a subset of the [_Camvid_ dataset](http://www0.cs.ucl.ac.uk/staff/G.Brostow/papers/Brostow_2009-PRL.pdf) from the paper "Semantic Object Classes in Video: A High-Definition Ground Truth Database" by Gabruel J. Brostow, Julien Fauqueur, and Roberto Cipolla:
 
 ![image](.attachments/1a493b413ac71d0517eee288fbcb894995de0b02.png) 
 
+### train vs valid loss
 
+![](assets/2026-02-11-17-27-29-image.png)
+
+### ### Samantic Object Classes in Video
+
+![](assets/2026-02-11-17-55-39-image.png)
+
+Explained:
+
+I'll break down each part of this code for you:
+
+## Data Loading Setup
+
+```python
+path = untar_data(URLs.CAMVID_TINY)
+```
+
+Downloads and extracts the CamVid Tiny dataset (a small segmentation dataset with street scene images) to a local directory.
+
+```python
+dls = SegmentationDataLoaders.from_label_func(
+```
+
+Creates DataLoaders specifically designed for image segmentation tasks.
+
+## DataLoader Parameters
+
+```python
+path, bs=8, fnames = get_image_files(path/"images"),
+```
+
+- `path`: Base directory for the data
+- `bs=8`: Batch size of 8 images
+- `fnames`: Gets all image files from the "images" subdirectory
+
+```python
+label_func = lambda o: path/'labels'/f'{o.stem}_P{o.suffix}',
+```
+
+Defines how to find the corresponding label/mask for each image. For an image named "abc.jpg", it looks for "abc_P.jpg" in the labels folder. The stem is the filename without extension, and suffix is the file extension.
+
+```python
+codes = np.loadtxt(path/'codes.txt', dtype=str)
+```
+
+Loads the class names (like "road", "car", "sky") from a text file that maps segmentation mask values to human-readable labels.
+
+## Model Training
+
+```python
+learn = unet_learner(dls, resnet34)
+```
+
+Creates a U-Net model for segmentation using ResNet34 as the encoder backbone. U-Net is a popular architecture for semantic segmentation.
+
+```python
+learn.fine_tune(8)
+```
+
+Trains the model for 8 epochs using transfer learning - first unfreezing and training the pretrained layers, then fine-tuning the entire network.
+
+## Training Output
+
+The progress bars and tables show the training progress with loss metrics and timing for each epoch, including validation performance.
+
+Good question! These are attributes of Python's `pathlib.Path` object:
+
+## `o.stem`
+
+The filename **without** the extension.
+
+Example:
+
+- If `o = Path("image_001.jpg")`
+- `o.stem` → `"image_001"`
+
+## `o.suffix`
+
+The file extension **including the dot**.
+
+Example:
+
+- If `o = Path("image_001.jpg")`
+- `o.suffix` → `".jpg"`
+
+## In the code context:
+
+```python
+label_func = lambda o: path/'labels'/f'{o.stem}_P{o.suffix}'
+```
+
+If the input image is `"street_scene.png"`:
+
+- `o.stem` = `"street_scene"`
+- `o.suffix` = `".png"`
+- Result: `path/'labels'/'street_scene_P.png'`
+
+This naming convention (`_P` suffix) is specific to the CamVid dataset, where label masks have the same name as their corresponding images but with `_P` appended before the extension.
+
+## Other useful Path attributes:
+
+- `o.name` → full filename (`"image_001.jpg"`)
+- `o.parent` → directory containing the file
+- `o.parts` → tuple of all path components
+
+### modeling natural language processing sentiment (IMDb)
+
+I'll break down this text classification code:
+
+## Import Statement
+
+```python
+from fastai.text.all import *
+```
+
+Imports all text-related functions and classes from fastai's text module.
+
+## Creating DataLoaders
+
+```python
+dls = TextDataLoaders.from_folder(untar_data(URLs.IMDB), valid='test')
+```
+
+- `untar_data(URLs.IMDB)`: Downloads and extracts the IMDB movie review dataset
+- `TextDataLoaders.from_folder()`: Creates DataLoaders from a folder structure
+- `valid='test'`: Uses the folder named "test" as the validation set (IMDB dataset has separate train/test folders)
+
+The IMDB dataset contains movie reviews labeled as positive or negative sentiment.
+
+## Creating the Learner
+
+```python
+learn = text_classifier_learner(dls, AWD_LSTM, drop_mult=0.5, metrics=accuracy)
+```
+
+- `text_classifier_learner()`: Creates a text classification model
+- `dls`: The DataLoaders created above
+- `AWD_LSTM`: **A**WD (ASGD Weight-Dropped) **LSTM** - a specific type of recurrent neural network architecture good for text
+- `drop_mult=0.5`: Dropout multiplier set to 0.5 (reduces overfitting by randomly dropping 50% of connections during training)
+- `metrics=accuracy`: Track accuracy as the evaluation metric (% of correct predictions)
+
+## Training
+
+```python
+learn.fine_tune(4, 1e-2)
+```
+
+- `4`: Train for 4 epochs
+- `1e-2`: Learning rate of 0.01 (controls how big the weight updates are during training)
+
+This uses transfer learning - the model starts with pretrained language understanding and fine-tunes it for sentiment classification.
+
+
+
+### doc
+
+![](assets/2026-02-11-18-54-40-image.png)
+
+### hyperparameters
+
+e. This is because in realistic scenarios we rarely build a model just 
+by training its weight parameters once. Instead, we are likely to 
+explore many versions of a model through various modeling choices 
+regarding network architecture, learning rates, data augmentation 
+strategies, and other factors we will discuss in upcoming chapters. Many
+ of these choices can be described as choices of *hyperparameters*.
+ The word reflects that they are parameters about parameters, since they
+ are the higher-level choices that govern the meaning of the weight 
+parameters.
