@@ -388,3 +388,17 @@ strategies, and other factors we will discuss in upcoming chapters. Many
  The word reflects that they are parameters about parameters, since they
  are the higher-level choices that govern the meaning of the weight 
 parameters.
+
+
+
+### timeseries predicting
+
+![](assets/2026-02-11-23-08-14-image.png)
+
+For example, Kaggle had a competition to [predict the sales in a chain of Ecuadorian grocery stores](https://www.kaggle.com/c/favorita-grocery-sales-forecasting).
+ Kaggle's training data ran from Jan 1 2013 to Aug 15 2017, and the test
+ data spanned Aug 16 2017 to Aug 31 2017. That way, the competition 
+organizer ensured that entrants were making predictions for a time 
+period that was *in the future*, from the perspective of their model. This is similar to the way quant hedge fund traders do *back-testing* to check whether their models are predictive of future periods, based on past data.
+
+
